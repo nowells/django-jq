@@ -19,7 +19,6 @@ def get_and_save(src, dst):
     dir  = os.path.dirname(dst)
     if not os.path.exists(dir):
         os.makedirs(dir)
-
     file = open(dst,'wb')
     file.write(buff)
     file.close
@@ -35,7 +34,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         onlyversion = options.get('onlyversion', None)
         
-        # Do quick and dirty validation if --noinput
         if onlyversion:
             versions = [onlyversion]
         else:

@@ -1,15 +1,18 @@
 from django.core.urlresolvers import RegexURLResolver, RegexURLPattern, normalize
 from django import template
 from django.conf import settings
+from django_jq import settings_defaults
 import cjson, re, sys
+
+JQUERY_REMOTE_URL = getattr(settings, 'JQUERY_REMOTE_URL', settings_defaults.JQUERY_REMOTE_URL)
+JQUERY_LOCAL_URL  = getattr(settings, 'JQUERY_LOCAL_URL',  settings_defaults.JQUERY_LOCAL_URL)
+JQUERY_VERSIONS   = getattr(settings, 'JQUERY_VERSIONS',   settings_defaults.JQUERY_VERSIONS)
 
 module = settings.ROOT_URLCONF.split('.')
 exec "from %s import %s" % (module[0], module[1]) # A little kitten die each time you do this.
 
 register = template.Library()
 SCRIPT_TAG = '<script type="text/javascript" src="%s"></script>'
-
-
 
 def join_url(*args):
     s = '/'.join(args)
@@ -46,9 +49,9 @@ class URLDict(object):
 def jquery_script(version="1.3", ajax=0):
     min = '' if settings.DEBUG else '.min'
     if ajax:
-        url = settings.JQUERY_REMOTE_URL % (version, min)
+        url = JQUERY_REMOTE_URL % (version, min)
     else:
-        url = settings.JQUERY_LOCAL_URL % (version, min)
+        url = JQUERY_LOCAL_URL % (version, min)
     return SCRIPT_TAG % url
 
 @register.simple_tag
